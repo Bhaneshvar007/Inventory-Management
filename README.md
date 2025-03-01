@@ -6,6 +6,11 @@
 ### 🚀 Overview  
 Inventory Management System ek powerful tool hai jo businesses ko unke stock, orders, aur suppliers ka sahi tarike se management karne me madad karta hai. Ye system user-friendly interface aur strong backend functionalities ke sath aata hai.  
 
+### view page
+<img src="https://i.imghippo.com/files/Vvpb2164Gg.png" alt="" border="0">
+
+### Auth Page
+<img src="https://i.imghippo.com/files/iVk7838u.png" alt="" border="0">
 
 ### 🛠️ Features  
 ✅ User Authentication (Login/Signup)  
