@@ -1,0 +1,110 @@
+﻿@model InventoryManagement_System.Models.CetegoryModel
+
+@{
+	ViewData["Title"] = "UpdateCetegory";
+}
+
+
+<style>
+
+
+	h1 {
+	 
+		color: #333;
+	}
+
+	.container {
+ 		 
+		background: white;
+		padding: 20px;
+		border-radius: 10px;
+	}
+
+	.form-group {
+		margin-bottom: 15px;
+	}
+
+	label {
+		font-weight: bold;
+		display: block;
+		margin-bottom: 5px;
+	}
+
+	input[type="text"] {
+		width: 30%;
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		font-size: 16px;
+	}
+
+	input[readonly] {
+		background-color: #e9ecef;
+		cursor: not-allowed;
+	}
+
+	.btn {
+		display: inline-block;
+		background-color: #007bff;
+		color: white;
+		padding: 10px 15px;
+		border: none;
+		border-radius: 5px;
+		font-size: 16px;
+		cursor: pointer;
+	}
+
+		.btn:hover {
+			background-color: #0056b3;
+		}
+
+	.back-link {
+		display: block;
+		margin-top: 10px;
+		text-align: center;
+		text-decoration: none;
+		color: #007bff;
+	}
+
+		.back-link:hover {
+			text-decoration: underline;
+		}
+
+	.home {
+		 
+		background-color: blueviolet;
+	}
+
+		.home:hover {
+			color: white;
+			background-color: darkviolet
+		}
+</style>
+
+<body>
+
+	<h1>Update Category</h1>
+
+	<div class="container">
+		<form action="UpdateCetegory" method="post">
+
+			<div class="form-group">
+				<label for="categoryId">Cetegory ID</label>
+				<input type="text" id="categoryId" name="cetegoryId" value="@Model.cetegoryId" readonly>
+
+			</div>
+			<div class="form-group">
+				<label for="categoryName">Category Name</label>
+				<input type="text" id="categoryName" name="cetegoryName" value="@Model.cetegoryName" required>
+
+			</div>
+			<div class="form-group d-flex align-items-center gap-3">
+				<input type="submit" value="Update" class="btn">
+				<a href="@Url.Action("Index", "Cetegory")" class="btn home">Back to Home</a>
+			</div>
+		</form>
+	</div>
+
+</body>
+
+

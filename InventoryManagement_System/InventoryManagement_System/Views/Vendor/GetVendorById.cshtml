@@ -1,0 +1,88 @@
+﻿@model InventoryManagement_System.Models.VendorCetegoryModel
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h1 class="text-center text-primary">Vendor Details</h1>
+
+<div class="card shadow-lg p-4 mt-4">
+    <h4 class="text-secondary">Vendor Information</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-4 font-weight-bold">Vendor ID</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.VendorId)</dd>
+
+        <dt class="col-sm-4 font-weight-bold">Vendor Name</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.VendorName)</dd>
+
+         
+        <dt class="col-sm-4 font-weight-bold">Vendor Email</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.VendorEmail)</dd>
+
+         
+        <dt class="col-sm-4 font-weight-bold">Vendor Adress</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.VendorAddress)</dd>
+              
+        <dt class="col-sm-4 font-weight-bold">Product Name</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.ProductModel.ProductName)</dd>
+
+                     
+        <dt class="col-sm-4 font-weight-bold">Cetegory Name</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.CetegoryModel.cetegoryName)</dd>
+
+         
+        <dt class="col-sm-4 font-weight-bold">Total Quantity </dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.Quantity)</dd>
+
+         <dt class="col-sm-4 font-weight-bold">Billing Amount </dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.Billing_amount)</dd>
+
+
+
+            <dt class="col-sm-4 font-weight-bold">Date of Sell </dt>
+        <dd class="col-sm-8">@Html.DisplayFor(model => model.vendorModel.Date_of_sale)</dd>
+
+         
+    </dl>
+</div>
+
+<div class="mt-4 text-center">
+    <a href="@Url.Action("UpdateVendor", "Vendor", new { id = Model.vendorModel.VendorId })" class="btn">Edit</a>
+    <a href="@Url.Action("Index", "Vendor")" class="btn btn-secondary">Back to List</a>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        background-color: #f8f9fa;
+    }
+
+    .font-weight-bold {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    .btn {
+        background-color: royalblue;
+        padding: 8px 18px;
+        color: white;
+        font-weight: bold;
+    }
+
+        .btn:hover {
+            background-color: royalblue;
+            color: white;
+        }
+
+
+    .btn-secondary {
+        font-weight: bold;
+        background-color: green;
+    }
+
+        .btn-secondary:hover {
+            background-color: green;
+        }
+</style>

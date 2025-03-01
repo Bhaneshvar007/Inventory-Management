@@ -1,0 +1,20 @@
+﻿<div class="form-group">
+    <label>@ViewData["BillingLabel"] <span class="text-danger">*</span></label>
+    <input type="number" step="0.01" id="BillingAmount" value="@ViewData["BillingValue"]" name="@ViewData["BillingName"]" class="form-control" readonly />
+    <span class="text-danger">@Html.ValidationMessage(ViewData["BillingName"].ToString())</span>
+</div>
+
+<script>
+    function calculateBillingAmount() {
+        const selectedProduct = $("#ProductDropDown option:selected");
+        const price = parseFloat(selectedProduct.data("price")) || 0;
+        const quantity = parseFloat($("#Quantity").val()) || 0;
+        const billingAmount = price * quantity;
+        $("#BillingAmount").val(billingAmount.toFixed(2));
+    }
+
+    $(document).ready(function () {
+        $("#Quantity").on("input", calculateBillingAmount);
+        $("#ProductDropDown").on("change", calculateBillingAmount);
+    });
+</script>

@@ -1,0 +1,19 @@
+﻿@model InventoryManagement_System.Models.VendorCetegoryModel
+
+<div class="form-group">
+    @Html.Label("Category")
+    @Html.DropDownList("vc_cetegoryId",
+            new SelectList(Model.V_cetegory, "cetegoryId", "cetegoryName"),
+            "Select Category",
+            new { @class = "form-control", id = "CategoryDropdown" })
+    @Html.ValidationMessage("vc_cetegoryId", "", new { @class = "text-danger" })
+</div>
+
+<div class="form-group">
+    @Html.Label("Products")
+    <select id="ProductDropDown" class="form-control" name="vc_productId">
+        <option value="">Select Product</option>
+    </select>
+    @Html.ValidationMessage("vc_productId", "", new { @class = "text-danger" })
+</div>
+ 

@@ -1,0 +1,147 @@
+﻿@model List<InventoryManagement_System.Models.ProductModel>
+
+@{
+    ViewData["Title"] = "Product List";
+    int i = 1;
+}
+
+
+<style>
+    .title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .table-container {
+        width: 90%;
+        margin: 0 auto;
+        overflow-x: auto;
+    }
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 18px;
+        text-align: left;
+    }
+
+        .styled-table th, .styled-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .styled-table th {
+            background-color: green;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .styled-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .styled-table tr:hover {
+            background-color: #ddd;
+        }
+
+    .btn {
+        padding: 8px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        text-align: center;
+        color:white;
+    }
+
+    .btn:hover{
+        color:white;
+    }
+
+    .edit {
+        background-color: royalblue;
+      
+    }
+
+    .delete {
+        background-color:red;
+        color: white;
+    }
+    .view{
+        background-color:darkorange ;
+    }
+    .add {
+        background-color: #007bff;
+        color: white;
+        margin-top: 20px;
+        display: block;
+        width: 200px;
+        text-align: center;
+        margin: 20px auto;
+    }
+
+    .no-data {
+        text-align: center;
+        font-weight: bold;
+        padding: 20px;
+        color: #777;
+    }
+</style>
+
+
+<h2 class="title">Product List</h2>
+
+<div class="add-product">
+    <a href="@Url.Action("CreateProduct", "Product")" class="btn add">Add New Product</a>
+</div>
+
+<div class="table-container">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(i++)</td>
+                        <td>@item.ProductName</td>
+                        <td>@item.ProductQuantity</td>
+                        <td>@item.ProductPrice</td>
+                        <td>@item.ProductBrand</td>
+                        <td>@item.Cetegory?.cetegoryName </td>
+                        <td>
+                            <a href="@Url.Action("GetProductById", "Product", new { id = item.ProductId })" class="btn view">View</a>
+                            <a href="@Url.Action("UpdateProduct", "Product", new { id = item.ProductId })" class="btn edit">Edit</a>
+                            <a href="@Url.Action("DeleteProduct", "Product", new { id = item.ProductId })" class="btn delete" onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="no-data">No products available.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+ 

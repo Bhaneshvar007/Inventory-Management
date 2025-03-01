@@ -1,0 +1,114 @@
+﻿@model InventoryManagement_System.Models.CetegoryModel
+
+
+
+@{
+    ViewData["Title"] = "Insert Category";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Category</title>
+    <style>
+       
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+            .btn:hover {
+                background-color: #218838;
+                color:white;
+            }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .home{
+            margin-top:20px;
+            background-color:blueviolet;
+        }
+
+        .home:hover{
+            color:white;
+            background-color:darkviolet
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Insert New Category</h1>
+        <form method="post" action="InsertCetegory">
+            <label for="cetegoryName">Cetegory Name:</label>
+            <input type="text" id="cetegoryName" name="cetegoryName" />
+            @Html.ValidationMessageFor(m => m.cetegoryName, "", new { @class = "text-danger" })
+
+            <button type="submit" class="btn">Insert Category</button>
+            <a href="@Url.Action("Index", "Cetegory")" class="btn home">Back to Home</a>
+
+        </form>
+
+        @if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div class="message @(ViewBag.IsSuccess ? "success" : "error")">
+                @ViewBag.Message
+            </div>
+        }
+    </div>
+
+</body>
+</html>

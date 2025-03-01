@@ -1,0 +1,92 @@
+﻿@model InventoryManagement_System.Models.CetegoryModel
+
+@{
+    ViewData["Title"] = "GetCetegoryById";
+}
+
+<style>
+    h1 {
+        color: #333;
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+    h4 {
+        color: #555;
+        font-family: Arial, sans-serif;
+    }
+
+    .row {
+        margin-top: 20px;
+    }
+
+    .col-sm-2 {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .col-sm-10 {
+        color: #444;
+    }
+
+    .btn.edit {
+        display: inline-block;
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+        .btn.edit:hover {
+            background-color: #218838;
+        }
+
+    .btn.home {
+        display: inline-block;
+      
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-left:10px;
+        background-color: blueviolet;
+    }
+
+        .home:hover {
+            color: white;
+            background-color: darkviolet
+        }
+
+</style>
+
+
+<h1>GetCetegoryById</h1>
+
+<div>
+    <h4>CetegoryModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Cetegory Id 
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cetegoryId)
+        </dd>
+        <dt class = "col-sm-2">
+            Cetegory Name
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cetegoryName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a href="@Url.Action("UpdateCetegory", "Cetegory", new { id = Model.cetegoryId })" class="btn edit">Update</a>
+    <a href="@Url.Action("Index", "Cetegory")" class="btn home">Back to Home</a>
+
+</div>

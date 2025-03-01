@@ -1,0 +1,251 @@
+﻿@*@model InventoryManagement_System.Models.VendorCetegoryModel
+
+@{
+    ViewData["Title"] = "Update Customer";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h2>Update Customer</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<form asp-action="UpdateCustomer" method="post">
+    <input type="hidden" name="Customers.Cust_id" value="@Model.Customers.Cust_id" />
+
+    <div class="form-group">
+        <label for="Customer_name">Customer Name:</label>
+        <input type="text" name="Customers.Customer_name" value="@Model.Customers.Customer_name"
+               class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Customer_address">Address:</label>
+        <input type="text" name="Customers.Customer_address"
+               value="@Model.Customers.Customer_address" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Customer_email">Email:</label>
+        <input type="email" name="Customers.Customer_email"
+               value="@Model.Customers.Customer_email" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Date_of_purchase">Date of Purchase:</label>
+        <input type="text" name="Customers.Date_of_purchess"
+               value="@Model.Customers.Date_of_purchess.ToString("yyyy-MM-dd HH:mm")"
+               id="Date_of_purchase" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Category")
+        @Html.DropDownList("vc_cetegoryId",
+                 new SelectList(Model.V_cetegory, "cetegoryId", "cetegoryName", Model.vc_cetegoryId),
+                 "Select Category",
+                 new { @class = "form-control", id = "CategoryDropdown" })
+        @Html.ValidationMessage("vc_cetegoryId", "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Products")
+        <select id="ProductDropDown" class="form-control" name="vc_productId">
+            <option value="">Select Product</option>
+        </select>
+        @Html.ValidationMessage("vc_productId", "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <label for="Quantity">Quantity:</label>
+        <input type="number" id="Quantity" name="Customers.Quantity"
+               value="@Model.Customers.Quantity" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Purchess Amount <span class="text-danger">*</span></label>
+        <input type="number" step="0.01" id="BillingAmount" value="@Model?.Customers.Purchess_amount"
+               name="Customers.Purchess_amount" class="form-control" readonly />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Purchess_amount")</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Update Customer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+</form>
+
+<script>
+    flatpickr("#Date_of_purchase", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
+
+    $(document).ready(function () {
+        var selectedProductId = "@Model.vc_productId"; // Pre-selected product ID
+
+        $("#CategoryDropdown").change(function () {
+            var categoryId = $(this).val();
+            $("#ProductDropDown").html('<option value="">Loading...</option>');
+
+            if (categoryId) {
+                $.ajax({
+                    url: '/Customer/GetProductsByCategory',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("Received data:", data); // Debugging
+
+                        $("#ProductDropDown").html('<option value="">Select Product</option>');
+                        $.each(data, function (index, product) {
+                            var selected = product.productId == selectedProductId ? 'selected' : ''; // Select the saved product
+                            $("#ProductDropDown").append(`<option value="${product.productId}" data-price="${product.productPrice}" ${selected}>${product.productName}</option>`);
+                        });
+
+                        calculateBillingAmount(); // Update amount after setting product
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX error:", status, error); // Debugging
+                    }
+                });
+            } else {
+                $("#ProductDropDown").html('<option value="">Select Product</option>');
+            }
+        });
+
+        // Auto-trigger change event to populate products when the page loads (if category is selected)
+        if ($("#CategoryDropdown").val()) {
+            $("#CategoryDropdown").trigger("change");
+        }
+
+        // Function to calculate billing amount
+        function calculateBillingAmount() {
+            const selectedProduct = $("#ProductDropDown option:selected");
+            const price = parseFloat(selectedProduct.data("price")) || 0;
+            const quantity = parseFloat($("#Quantity").val()) || 0;
+            const billingAmount = price * quantity;
+            $("#BillingAmount").val(billingAmount.toFixed(2));
+        }
+
+        // Event listeners
+        $("#Quantity").on("input", calculateBillingAmount);
+        $("#ProductDropDown").on("change", calculateBillingAmount);
+    });
+</script>
+*@
+
+
+@model InventoryManagement_System.Models.VendorCetegoryModel
+
+@{
+    ViewData["Title"] = "Update Customer";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h2>Update Customer</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<form asp-action="UpdateCustomer" method="post">
+    <input type="hidden" name="Customers.Cust_id" value="@Model.Customers.Cust_id" />
+
+    @Html.Partial("_CustomerVendorInfoForm", Model)
+
+
+   
+    @Html.Partial("_CustomerVendorForm", Model)
+
+
+    <div class="form-group">
+        <label for="Quantity">Quantity:</label>
+        <input type="number" id="Quantity" name="Customers.Quantity"
+               value="@Model.Customers.Quantity" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Purchess Amount <span class="text-danger">*</span></label>
+        <input type="number" step="0.01" id="BillingAmount" value="@Model?.Customers.Purchess_amount"
+               name="Customers.Purchess_amount" class="form-control" readonly />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Purchess_amount")</span>
+    </div>
+
+    <div class="form-group">
+        <label for="Date_of_purchase">Date of Purchase:</label>
+        <input type="text" name="Customers.Date_of_purchess"
+               value="@Model.Customers.Date_of_purchess.ToString("yyyy-MM-dd HH:mm")"
+               id="Date_of_purchase" class="form-control" required />
+    </div>
+
+
+    <button type="submit" class="btn btn-primary mt-3">Update Customer</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+</form>
+
+<script>
+    flatpickr("#Date_of_purchase", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
+
+    $(document).ready(function () {
+        var selectedProductId = "@Model.vc_productId"; 
+        $("#CategoryDropdown").change(function () {
+            var categoryId = $(this).val();
+            $("#ProductDropDown").html('<option value="">Loading...</option>');
+
+            if (categoryId) {
+                $.ajax({
+                    url: '/Customer/GetProductsByCategory',
+                    type: 'GET',
+                    data: { categoryId: categoryId },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("Received data:", data); 
+
+                        $("#ProductDropDown").html('<option value="">Select Product</option>');
+                        $.each(data, function (index, product) {
+                            var selected = product.productId == selectedProductId ? 'selected' : '';
+                            $("#ProductDropDown").append(`<option value="${product.productId}" data-price="${product.productPrice}" ${selected}>${product.productName}</option>`);
+                        });
+
+                        calculateBillingAmount();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX error:", status, error); 
+                    }
+                });
+            } else {
+                $("#ProductDropDown").html('<option value="">Select Product</option>');
+            }
+        });
+
+        // Auto-trigger change event to populate products when the page loads (if category is selected)
+        if ($("#CategoryDropdown").val()) {
+            $("#CategoryDropdown").trigger("change");
+        }
+
+        // Function to calculate billing amount
+        function calculateBillingAmount() {
+            const selectedProduct = $("#ProductDropDown option:selected");
+            const price = parseFloat(selectedProduct.data("price")) || 0;
+            const quantity = parseFloat($("#Quantity").val()) || 0;
+            const billingAmount = price * quantity;
+            $("#BillingAmount").val(billingAmount.toFixed(2));
+        }
+
+        // Event listeners
+        $("#Quantity").on("input", calculateBillingAmount);
+        $("#ProductDropDown").on("change", calculateBillingAmount);
+    });
+</script>

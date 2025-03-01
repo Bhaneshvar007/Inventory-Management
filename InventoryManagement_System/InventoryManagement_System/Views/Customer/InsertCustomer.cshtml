@@ -1,0 +1,289 @@
+﻿
+@*
+@using InventoryManagement_System.Models
+@model VendorCetegoryModel;
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h2>Add Customer</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<div id="fullScreenLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+        <img src="https://cdnjs.cloudflare.com/ajax/libs/timelinejs/2.25/css/loading.gif" alt="Loading..." />
+    </div>
+</div>
+
+<form method="post" action="InsertCustomer">
+    <input type="hidden" name="Customers.Cust_id" value="0" />
+
+    <div class="form-group">
+        <label>Customer Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="Customer_name" name="Customers.Customer_name" />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Customer_name")</span>
+    </div>
+
+    <div class="form-group">
+        <label>Customer Email <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="Customer_email" name="Customers.Customer_email" />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Customer_email")</span>
+    </div> 
+    
+    <div class="form-group">
+        <label>Customer Address</label>
+        <input type="text" class="form-control" id="Customer_address" name="Customers.Customer_address" />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Customer_address")</span>
+    </div>
+
+  
+
+    <div class="form-group">
+        @Html.Label("Category")
+        @Html.DropDownList("vc_cetegoryId",
+                 new SelectList(Model.V_cetegory, "cetegoryId", "cetegoryName"),
+                 "Select Category",
+                 new { @class = "form-control", id = "CategoryDropdown" })
+        @Html.ValidationMessage("vc_cetegoryId", "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Products")
+        <select id="ProductDropDown" class="form-control" name="vc_productId">
+            <option value="">Select Product</option>
+        </select>
+        @Html.ValidationMessage("vc_productId", "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <label>Quantity <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" id="Quantity" name="Customers.Quantity" />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Quantity")</span>
+    </div>
+
+    <div class="form-group">
+        <label>Purchess Amount <span class="text-danger">*</span></label>
+        <input type="number" step="0.01" id="BillingAmount" 
+               name="Customers.Purchess_amount" class="form-control" readonly />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Purchess_amount")</span>
+    </div>
+
+
+    <div class="form-group">
+        <label>Date of Purchess</label>
+        <input type="text" class="form-control" id="Date_of_purchess" name="Customers.Date_of_purchess" placeholder="Select a date" />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Date_of_purchess")</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    <a href="@Url.Action("Index", "Customer")" class="btn btn-secondary mt-4">Back to List</a>
+</form>
+
+<script>
+    flatpickr("#Date_of_purchess", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
+
+    $(document).ready(function () {
+        $("#fullScreenLoader").hide();  
+    });
+
+
+    function showLoader() {
+        $("#fullScreenLoader").fadeIn();
+    }
+
+    function hideLoader() {
+        setTimeout(() => {
+            $("#fullScreenLoader").fadeOut();
+        }, 200);  
+    }
+
+   
+    $("#CategoryDropdown").change(function () {
+        var categoryId = $(this).val();
+        $("#ProductDropDown").html('<option value="">Loading...</option>');
+
+        if (categoryId) {
+            showLoader();  
+            $.ajax({
+                url: '/Customer/GetProductsByCategory',
+                type: 'GET',
+                data: { categoryId: categoryId },
+                success: function (data) {
+                    setTimeout(() => {
+                        $("#ProductDropDown").html('<option value="">Select Product</option>');
+                        $.each(data, function (index, product) {
+                            $("#ProductDropDown").append(`<option value="${product.productId}" data-price="${product.productPrice}">${product.productName}</option>`);
+                        });
+                        hideLoader();  
+                    }, 500);
+                },
+                error: function () {
+                    hideLoader();
+                }
+            });
+        } else {
+            $("#ProductDropDown").html('<option value="">Select Product</option>');
+        }
+    });
+
+
+    function calculateBillingAmount() {
+        const selectedProduct = $("#ProductDropDown option:selected");
+        const price = parseFloat(selectedProduct.data("price")) || 0;
+        const quantity = parseFloat($("#Quantity").val()) || 0;
+        const billingAmount = price * quantity;
+        $("#BillingAmount").val(billingAmount.toFixed(2));
+    }
+
+
+    $(document).ready(function () {
+        $("#Quantity").on("input", calculateBillingAmount);
+        $("#ProductDropDown").on("change", calculateBillingAmount);
+    });
+ 
+</script>
+*@
+@* 
+
+@{
+    var viewModel = new CustomerVendorViewModel
+            {
+                Name = Model.Customer_name,
+                Email = Model.Customer_email,
+                Address = Model.Customer_address,
+                IsCustomer = true
+            };
+}
+
+@Html.Partial("_CustomerVendorPartial", viewModel)
+*@
+
+@using InventoryManagement_System.Models
+@model VendorCetegoryModel;
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h2>Add Customer</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<div id="fullScreenLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+        <img src="https://cdnjs.cloudflare.com/ajax/libs/timelinejs/2.25/css/loading.gif" alt="Loading..." />
+    </div>
+</div>
+
+<form method="post" action="InsertCustomer">
+    <input type="hidden" name="Customers.Cust_id" value="0" />
+
+     @Html.Partial("_CustomerVendorInfoForm", Model) 
+
+    @Html.Partial("_CustomerVendorForm", Model)
+
+    
+
+    <div class="form-group">
+        <label>Quantity <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" id="Quantity" name="Customers.Quantity" />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Quantity")</span>
+    </div>
+
+    <div class="form-group">
+        <label>Purchess Amount <span class="text-danger">*</span></label>
+        <input type="number" step="0.01" id="BillingAmount"
+               name="Customers.Purchess_amount" class="form-control" readonly />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Purchess_amount")</span>
+    </div>
+
+
+    <div class="form-group">
+        <label>Date of Purchess</label>
+        <input type="text" class="form-control" id="Date_of_purchess" name="Customers.Date_of_purchess" placeholder="Select a date" />
+        <span class="text-danger">@Html.ValidationMessage("Customers.Date_of_purchess")</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+    <a href="@Url.Action("Index", "Customer")" class="btn btn-secondary mt-4">Back to List</a>
+</form>
+
+<script>
+    flatpickr("#Date_of_purchess", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+    });
+
+    $(document).ready(function () {
+        $("#fullScreenLoader").hide();
+    });
+
+
+    function showLoader() {
+        $("#fullScreenLoader").fadeIn();
+    }
+
+    function hideLoader() {
+        setTimeout(() => {
+            $("#fullScreenLoader").fadeOut();
+        }, 200);
+    }
+
+
+    $("#CategoryDropdown").change(function () {
+        var categoryId = $(this).val();
+        $("#ProductDropDown").html('<option value="">Loading...</option>');
+
+        if (categoryId) {
+            showLoader();
+            $.ajax({
+                url: '/Customer/GetProductsByCategory',
+                type: 'GET',
+                data: { categoryId: categoryId },
+                success: function (data) {
+                    setTimeout(() => {
+                        $("#ProductDropDown").html('<option value="">Select Product</option>');
+                        $.each(data, function (index, product) {
+                            $("#ProductDropDown").append(`<option value="${product.productId}" data-price="${product.productPrice}">${product.productName}</option>`);
+                        });
+                        hideLoader();
+                    }, 500);
+                },
+                error: function () {
+                    hideLoader();
+                }
+            });
+        } else {
+            $("#ProductDropDown").html('<option value="">Select Product</option>');
+        }
+    });
+
+
+    function calculateBillingAmount() {
+        const selectedProduct = $("#ProductDropDown option:selected");
+        const price = parseFloat(selectedProduct.data("price")) || 0;
+        const quantity = parseFloat($("#Quantity").val()) || 0;
+        const billingAmount = price * quantity;
+        $("#BillingAmount").val(billingAmount.toFixed(2));
+    }
+
+
+    $(document).ready(function () {
+        $("#Quantity").on("input", calculateBillingAmount);
+        $("#ProductDropDown").on("change", calculateBillingAmount);
+    });
+
+</script>

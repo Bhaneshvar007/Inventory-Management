@@ -1,0 +1,30 @@
+﻿
+@{
+    var isCustomer = Model.modelType == "Customers";
+}
+
+<div class="form-group">
+    <label class="control-label">@(@isCustomer ? "Customer Name" : "Vendor Name")</label>
+    <input name="@(isCustomer ? "Customers.Customer_name" : "vendorModel.VendorName")"
+           value="@(isCustomer ? Model?.Customers?.Customer_name : Model?.vendorModel?.VendorName)"
+           class="form-control" />
+    <span class="text-danger">
+        @Html.ValidationMessage((isCustomer ? "Customers.Customer_name" : "vendorModel.VendorName"))
+     </span>
+</div>
+
+<div class="form-group">
+    <label class="control-label">Email</label>
+    <input name="@(isCustomer ? "Customers.Customer_email" : "vendorModel.VendorEmail")"
+           value="@(isCustomer ? Model?.Customers?.Customer_email : Model?.vendorModel?.VendorEmail)"
+           class="form-control" />
+    <span class="text-danger">@Html.ValidationMessage((isCustomer ? "Customers.Customer_email" : "vendorModel.VendorEmail"))</span>
+</div>
+
+<div class="form-group">
+    <label class="control-label">Address</label>
+    <input name="@(isCustomer ? "Customers.Customer_address" : "vendorModel.VendorAddress")"
+           value="@(isCustomer ? Model?.Customers?.Customer_address : Model?.vendorModel?.VendorAddress)"
+           class="form-control" />
+    <span class="text-danger">@Html.ValidationMessage((isCustomer ? "Customers.Customer_address" : "vendorModel.VendorAddress"))</span>
+</div>

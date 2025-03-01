@@ -1,0 +1,127 @@
+﻿
+
+@model List<VendorModel>
+
+@{
+    ViewBag.Title = "Vendor List";
+    int i = 1;
+}
+
+<style>
+
+    .add-product{
+        display:flex;
+        justify-content:center;
+    }
+
+    .table{
+        width:1400px;
+        margin-left:-50px;
+    }
+
+    h2{
+        text-align : center;
+    }
+
+    thead{
+        background-color:forestgreen;
+        color:white;
+    }
+
+    btn {
+        padding: 8px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        text-align: center;
+        color: white;
+    }
+
+    .btn:hover {
+        color: white;
+    }
+
+    .add {
+        background-color: #007bff;
+        color: white;
+        margin-top: 20px;
+        width: 200px;
+        margin: 20px;
+    }
+
+    .stock{
+        background-color:green;
+    }
+
+    td,th{
+        text-align:center;
+    }
+
+    .edit {
+        background-color: royalblue;
+        color: white;
+    }
+
+    .delete {
+        background-color: red;
+        color: white;
+    }
+
+    .view {
+        background-color: darkorange;
+        color: white;
+    }
+</style>
+
+<h2>Vendor List</h2>
+<div class="add-product">
+    <a href="@Url.Action("InsertVendor", "Vendor")" class="btn add">Add New Vendor</a>
+    <a href="@Url.Action("Index", "Stock")" class="btn add stock">Manage Stock</a>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Vendor Id</th>
+            <th>Vendor Name</th>
+            <th>Vendor Email</th>
+            <th>Vendor Address</th>
+            <th>Quantity</th>
+            <th>Billing Amount</th>
+            <th>Date of Sale</th>
+            <th>Category Name</th>
+            <th>Product Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var vendor in Model)
+            {
+                <tr>
+                    <td>@(i++)</td>
+                    <td>@vendor.VendorName</td>
+                    <td>@vendor.VendorEmail</td>
+                    <td>@vendor.VendorAddress</td>
+                    <td>@vendor.Quantity</td>
+                    <td>@vendor.Billing_amount.ToString("C")</td>
+                    <td>@vendor.Date_of_sale.ToString("yyyy-MM-dd")</td>
+                    <td>@vendor.CetegoryModel?.cetegoryName</td>
+                    <td>@vendor.ProductModel?.ProductName </td>
+                    <td>
+                        <a href="@Url.Action("GetVendorById", "Vendor", new { id = vendor.VendorId })" class="btn view">View</a>
+                        <a href="@Url.Action("UpdateVendor", "Vendor", new { id = vendor.VendorId})" class="btn edit">Edit</a>
+                        <a href="@Url.Action("DeleteVendor", "Vendor", new { id = vendor.VendorId})" class="btn delete" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" class="text-center">No vendors found</td>
+            </tr>
+        }
+    </tbody>
+</table>

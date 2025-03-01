@@ -1,0 +1,129 @@
+﻿@model List<CustomerModel>
+
+@{
+	ViewBag.Title = "Customer List";
+	int i = 1;
+}
+
+<style>
+
+	.table {
+		width: 1500px;
+		margin-left: -100px;
+		font-size: 14px;
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	thead {
+		background-color: forestgreen;
+		color: white;
+	}
+
+	btn {
+		padding: 8px 12px;
+		border-radius: 5px;
+		text-decoration: none;
+		font-weight: bold;
+		display: inline-block;
+		text-align: center;
+		color: white;
+	}
+
+	.btn:hover {
+		color: white;
+	}
+
+	.add-cetegory {
+		text-align: left;
+	}
+
+	.add {
+		background-color: #007bff;
+		color: white;
+		margin-top: 20px;
+		display: block;
+		width: 200px;
+		text-align: center;
+		margin: 20px auto;
+	}
+
+	td, th {
+		text-align: center;
+	}
+
+	.edit {
+		background-color: royalblue;
+		color: white;
+	}
+
+	.delete {
+		background-color: red;
+		color: white;
+	}
+
+	.view {
+		background-color: darkorange;
+		color: white;
+	}
+
+
+	.btns {
+	}
+</style>
+
+<h2>Customer List</h2>
+<div class="add-cetegory">
+	<a href="@Url.Action("InsertCustomer", "Customer")" class="btn add">Add Customer</a>
+</div>
+<table class="table">
+	<thead>
+		<tr>
+			<th>Cust Id</th>
+			<th>Cust Name</th>
+			<th>Customer Email</th>
+			<th>Customer Address</th>
+			<th>Category Name</th>
+			<th>Product Name</th>
+			<th>Quantity</th>
+			<th>Billing Amount</th>
+			<th>Date of Purchase</th>
+
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model != null && Model.Count > 0)
+		{
+			foreach (var customer in Model)
+			{
+				<tr>
+					<td>@(i++)</td>
+					<td>@customer.Customer_name</td>
+					<td>@customer.Customer_email</td>
+					<td>@customer.Customer_address</td>
+					<td>@customer.Cetegory?.cetegoryName</td>
+					<td>@customer.Product?.ProductName</td>
+					<td>@customer.Quantity</td>
+					<td>@customer.Purchess_amount.ToString("C")</td>
+					<td>@customer.Date_of_purchess.ToString("yyyy-MM-dd")</td>
+
+
+						<td class="btns">
+							<a href="@Url.Action("GetCustomerById", "Customer", new { id = customer.Cust_id })" class="btn view">View</a>
+							<a href="@Url.Action("UpdateCustomer", "Customer", new { id = customer.Cust_id})" class="btn edit">Edit</a>
+							<a href="@Url.Action("DeleteCustomer", "Customer", new { id = customer.Cust_id})" class="btn delete" onclick="return confirm('Are you sure?')">Delete</a>
+						</td>
+				</tr>
+			}
+		}
+		else
+		{
+			<tr>
+				<td colspan="9" class="text-center">No vendors found</td>
+			</tr>
+		}
+	</tbody>
+</table>

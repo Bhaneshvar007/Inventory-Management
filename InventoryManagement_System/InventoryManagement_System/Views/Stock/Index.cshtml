@@ -1,0 +1,147 @@
+﻿@model VendorCetegoryModel
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<h2>Add Stock</h2>
+
+<div id="fullScreenLoader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+	<div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+		<img src="https://cdnjs.cloudflare.com/ajax/libs/timelinejs/2.25/css/loading.gif" alt="Loading..." />
+	</div>
+</div>
+
+@if (ViewBag.Message != null)
+{
+	<div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<form method="post" action="@Url.Action("InsertStock", "Stock")">
+	<div class="form-group">
+		<label>Vendor <span class="text-danger">*</span></label>
+		<select id="VendorDropdown" name="vendorModel.VendorId" class="form-control">
+			<option value="">-- Select Vendor --</option>
+			@foreach (var vendor in (List<VendorModel>)ViewBag.VendorList)
+			{
+				<option value="@vendor.VendorId">@vendor.VendorName</option>
+			}
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label>Category <span class="text-danger">*</span></label>
+		<select id="CategoryDropdown" name="vc_cetegoryId" class="form-control">
+			<option value="">-- Select Category --</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label>Products <span class="text-danger">*</span></label>
+		<select id="ProductDropDown" class="form-control" name="vc_productId">
+			<option value="">-- Select Product --</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label>Quantity <span class="text-danger">*</span></label>
+		<input type="number" class="form-control" id="Quantity" name="vendorModel.Quantity" min="1" />
+	</div>
+
+	<div class="form-group">
+		<label>Billing Amount <span class="text-danger">*</span></label>
+		<input type="number" step="0.01" id="BillingAmount" name="vendorModel.Billing_amount" class="form-control" readonly />
+	</div>
+
+	<button type="submit" class="btn btn-primary mt-4">Submit</button>
+	<a href="@Url.Action("Index", "Vendor")" class="btn btn-secondary mt-4">Back to List</a>
+</form>
+
+<script>
+	$(document).ready(function () {
+		$("#fullScreenLoader").hide();
+
+		flatpickr("#Date_of_sale", {
+			enableTime: true,
+			dateFormat: "Y-m-d H:i",
+			time_24hr: true,
+		});
+
+		function calculateBillingAmount() {
+			const selectedProduct = $("#ProductDropDown option:selected");
+			const price = parseFloat(selectedProduct.data("price")) || 0;
+			const quantity = parseInt($("#Quantity").val()) || 0;
+			const billingAmount = price * quantity;
+			$("#BillingAmount").val(billingAmount.toFixed(2));
+		}
+
+		$("#Quantity").on("input", calculateBillingAmount);
+		$("#ProductDropDown").on("change", calculateBillingAmount);
+
+		function showLoader() { $("#fullScreenLoader").fadeIn(); }
+		function hideLoader() { $("#fullScreenLoader").fadeOut(); }
+
+		// Fetch Categories when Vendor changes
+		$("#VendorDropdown").on("change", function () {
+			var vendorId = $(this).val();
+			
+			var categoryDropdown = $("#CategoryDropdown");
+			categoryDropdown.html('<option value="">Loading...</option>');
+
+			if (vendorId) {
+				$.ajax({
+					url: '@Url.Action("GetCategoriesByVendor", "Stock")',
+					type: 'GET',
+					data: { vendorId: vendorId },
+					dataType: 'json',
+					beforeSend: showLoader,
+					success: function (data) {
+						categoryDropdown.html('<option value="">-- Select Category --</option>');
+						$.each(data, function (index, category) {
+							categoryDropdown.append(`<option value="${category.cetegoryId}">${category.cetegoryName}</option>`);
+						});
+					},
+					error: function () {
+						alert("Error fetching categories. Please try again.");
+						categoryDropdown.html('<option value="">Error loading categories</option>');
+					},
+					complete: hideLoader
+				});
+			} else {
+				categoryDropdown.html('<option value="">-- Select Category --</option>');
+			}
+		});
+
+		// Fetch Products when Category changes
+		$("#CategoryDropdown").on("change", function () {
+			var categoryId = $(this).val();
+			var productDropdown = $("#ProductDropDown");
+
+			productDropdown.html('<option value="">Loading...</option>');
+
+			if (categoryId) {
+				$.ajax({
+					url: '@Url.Action("GetProductsByCategory", "Vendor")',
+					type: 'GET',
+					data: { categoryId: categoryId },
+					dataType: 'json',
+					beforeSend: showLoader,
+					success: function (data) {
+						productDropdown.html('<option value="">-- Select Product --</option>');
+
+						$.each(data, function (index, product) {
+							productDropdown.append(`<option value="${product.productId}" data-price="${product.productPrice}">${product.productName}</option>`);
+						});
+					},
+					error: function () {
+						alert("Error fetching products. Please try again.");
+						productDropdown.html('<option value="">Error loading products</option>');
+					},
+					complete: hideLoader
+				});
+			} else {
+				productDropdown.html('<option value="">-- Select Product --</option>');
+			}
+		});
+	});
+</script>
