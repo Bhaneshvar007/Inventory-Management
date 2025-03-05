@@ -9,9 +9,9 @@ namespace InventoryManagement_System.IHelper
         Task<List<VendorModel>> GetVendorListAsync();
         Task<VendorCetegoryModel> InsertVendor();
         Task<string> InsertVendorAsync(VendorCetegoryModel vendor);
-        Task<VendorCetegoryModel> GetVendorByIdAsync(int id);
+        Task<VendorCetegoryModel> GetVendorByIdAsync(int id1 , int id2);
         Task<string> UpdateVendorAsync(VendorCetegoryModel vendor);
-        Task<string> DeleteVendorAsync(int id);
+        Task<string> DeleteVendorAsync(int id1 , int id2);
         Task<List<ProductModel>> GetProductsByCategoryAsync(int categoryId);
     }
 }

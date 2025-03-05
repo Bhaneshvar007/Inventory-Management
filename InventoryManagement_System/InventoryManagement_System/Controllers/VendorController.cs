@@ -291,9 +291,9 @@ namespace InventoryManagement_System.Controllers
 
         [HttpGet]
         [Route("GetVendorById")]
-        public async Task<IActionResult> GetVendorById(int id)
+        public async Task<IActionResult> GetVendorById(int id1 , int id2)
         {
-            var vendor = await _vendorHelper.GetVendorByIdAsync(id);
+            var vendor = await _vendorHelper.GetVendorByIdAsync(id1 , id2);
             if (vendor == null) return NotFound();
 
             return View(vendor);
@@ -301,9 +301,9 @@ namespace InventoryManagement_System.Controllers
 
         [HttpGet]
         [Route("UpdateVendor")]
-        public async Task<IActionResult> UpdateVendor(int id)
+        public async Task<IActionResult> UpdateVendor(int id1 , int id2)
         {
-            var vendor = await _vendorHelper.GetVendorByIdAsync(id);
+            var vendor = await _vendorHelper.GetVendorByIdAsync(id1 , id2);
             if (vendor == null) return NotFound();
 
             return View(vendor);
@@ -321,9 +321,9 @@ namespace InventoryManagement_System.Controllers
 
         [HttpGet]
         [Route("DeleteVendor")]
-        public async Task<IActionResult> DeleteVendor(int id)
+        public async Task<IActionResult> DeleteVendor(int id1, int id2)
         {
-            await _vendorHelper.DeleteVendorAsync(id);
+            await _vendorHelper.DeleteVendorAsync(id1 , id2);
             return RedirectToAction("Index");
         }
 

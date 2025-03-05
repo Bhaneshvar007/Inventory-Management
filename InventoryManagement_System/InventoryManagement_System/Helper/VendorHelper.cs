@@ -23,10 +23,13 @@ namespace InventoryManagement_System.Helper
 
         public async Task<List<VendorModel>> GetVendorListAsync()
         {
-            return await _vendor.GetVendorListAsync();
-        }
+            var vendor = await _vendor.GetVendorListAsync();
+            var vendorProduct = await _vendor.GetVendorProductListAsync();
 
-       
+            return vendorProduct;
+        }
+          
+         
         public async Task<VendorCetegoryModel> InsertVendor()
         {
             var viewModel = new VendorCetegoryModel();
@@ -95,9 +98,9 @@ namespace InventoryManagement_System.Helper
             return await _vendor.InsertVendorAsync(newVendor);
         }
 
-        public async Task<VendorCetegoryModel> GetVendorByIdAsync(int id)
+        public async Task<VendorCetegoryModel> GetVendorByIdAsync(int id1 , int id2)
         {
-            var vendor = await _vendor.GetVendorByIdAsync(id);
+            var vendor = await _vendor.GetVendorByIdAsync(id1 , id2);
             if (vendor == null) return null;
 
             return new VendorCetegoryModel
@@ -129,11 +132,10 @@ namespace InventoryManagement_System.Helper
             return await _vendor.UpdateVendorAsync(updatedVendor);
         }
 
-        public async Task<string> DeleteVendorAsync(int id)
+        public async Task<string> DeleteVendorAsync(int id1, int id2)
         {
-            return await _vendor.DeleteVendorAsync(id);
+            return await _vendor.DeleteVendorAsync(id1 , id2);
         }
-
         public async Task<List<ProductModel>> GetProductsByCategoryAsync(int categoryId)
         {
             return await _product.GetProductsByCategoryAsync(categoryId);

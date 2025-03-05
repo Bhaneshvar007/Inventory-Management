@@ -526,3 +526,5 @@ D:\DotNet_Core\InventoryManagement_System\InventoryManagement_System\InventoryMa
 D:\DotNet_Core\InventoryManagement_System\InventoryManagement_System\InventoryManagement_System\obj\Debug\net8.0\InventoryManagement_System.pdb
 D:\DotNet_Core\InventoryManagement_System\InventoryManagement_System\InventoryManagement_System\obj\Debug\net8.0\InventoryManagement_System.genruntimeconfig.cache
 D:\DotNet_Core\InventoryManagement_System\InventoryManagement_System\InventoryManagement_System\obj\Debug\net8.0\ref\InventoryManagement_System.dll
+D:\DotNet_Core\InventoryManagement_System\InventoryManagement_System\InventoryManagement_System\obj\Debug\net8.0\InventoryManagement_System.sourcelink.json
+D:\DotNet_Core\InventoryManagement_System\InventoryManagement_System\InventoryManagement_System\bin\Debug\net8.0\BCrypt.Net-Next.dll

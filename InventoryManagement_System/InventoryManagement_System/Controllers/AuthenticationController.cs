@@ -2,7 +2,9 @@
 using InventoryManagement_System.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Linq;
+using System.Threading.Tasks;
+using BCrypt.Net;
 
 namespace InventoryManagement_System.Controllers
 {
@@ -23,10 +25,12 @@ namespace InventoryManagement_System.Controllers
 
         [HttpPost]
         [Route("Registration")]
-        public async  Task<IActionResult> Registration(Auth auth)
+        public async Task<IActionResult> Registration(Auth authModel)
         {
-            // user pahgle se ragister hia uska logic
-            var res = await this.auth.RegistrationAsync(auth);
+            // Hash the password before storing it
+            authModel.Password = BCrypt.Net.BCrypt.HashPassword(authModel.Password);
+
+            var res = await this.auth.RegistrationAsync(authModel);
             return RedirectToAction("LoginUser", "Authentication");
         }
 
@@ -43,13 +47,17 @@ namespace InventoryManagement_System.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginUser(Auth auth)
+        public async Task<IActionResult> LoginUser(Auth authModel)
         {
-            var user = await this.auth.GetAuthUserAsync();
-            if (user != null)
+            var users = await this.auth.GetAuthUserAsync();
+
+            if (users != null)
             {
-                if (user.FirstOrDefault().Email.Equals(auth.Email)) {
-                    HttpContext.Session.SetString("Name" , user.FirstOrDefault().Username);
+                var dbUser = users.FirstOrDefault(u => u.Email == authModel.Email);
+
+                if (dbUser != null && BCrypt.Net.BCrypt.Verify(authModel.Password, dbUser.Password))
+                {
+                    HttpContext.Session.SetString("Name", dbUser.Username);
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -61,9 +69,8 @@ namespace InventoryManagement_System.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();      
-            return RedirectToAction("LoginUser", "Authentication");    
+            HttpContext.Session.Clear();
+            return RedirectToAction("LoginUser", "Authentication");
         }
-
     }
 }

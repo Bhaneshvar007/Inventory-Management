@@ -18,6 +18,7 @@ namespace InventoryManagement_System.Services
         {
 
             var vendors = new List<VendorModel>();
+            
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -25,6 +26,64 @@ namespace InventoryManagement_System.Services
                     await connection.OpenAsync();
 
                     using (SqlCommand cmd = new SqlCommand("sp_GetVendors", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                vendors.Add(new VendorModel
+                                {
+                                    VendorId = reader.GetInt32(reader.GetOrdinal("VendorId")),
+                                    VendorName = reader.GetString(reader.GetOrdinal("VendorName")),
+                                    VendorEmail = reader.GetString(reader.GetOrdinal("VendorEmail")),
+                                    VendorAddress = reader.GetString(reader.GetOrdinal("VendorAddress")),
+                                    Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
+                                    Billing_amount = reader.GetDecimal(reader.GetOrdinal("Billing_amount")),
+                                    Date_of_sale = reader.GetDateTime(reader.GetOrdinal("Date_of_sale")),
+                                    CetegoryModel = new CetegoryModel
+                                    {
+                                        cetegoryId = reader.GetInt32(reader.GetOrdinal("cetegoryId")),
+                                        cetegoryName = reader.GetString(reader.GetOrdinal("cetegoryName"))
+
+                                    },
+                                    ProductModel = new ProductModel
+                                    {
+                                        ProductId = reader.GetInt32(reader.GetOrdinal("ProductId")),
+                                        ProductName = reader.GetString(reader.GetOrdinal("ProductName")),
+                                        ProductPrice = reader.GetDecimal(reader.GetOrdinal("ProductPrice"))
+                                    }
+                                });
+                            }
+                        }
+
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+            return vendors;
+        }
+         
+        public async Task<List<VendorModel>> GetVendorProductListAsync()
+        {
+
+            var vendors = new List<VendorModel>();
+            
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (SqlCommand cmd = new SqlCommand("sp_GetStockDetails", connection))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
@@ -112,10 +171,11 @@ namespace InventoryManagement_System.Services
                 Console.WriteLine(ex);
                 throw;
             }
+       
         }
 
 
-        public async Task<VendorModel> GetVendorByIdAsync(int id)
+        public async Task<VendorModel> GetVendorByIdAsync(int id1 , int id2  )
         {
             try
             {
@@ -125,7 +185,8 @@ namespace InventoryManagement_System.Services
                     using (SqlCommand cmd = new SqlCommand("sp_GetVendorById", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@VendorId", id);
+                        cmd.Parameters.AddWithValue("@VendorId", id1);
+                        cmd.Parameters.AddWithValue("@ProductId", id2);
 
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
@@ -167,7 +228,7 @@ namespace InventoryManagement_System.Services
             return null; // Return null only if no data is found
         }
 
-        public async Task<string> DeleteVendorAsync(int VendorId)
+        public async Task<string> DeleteVendorAsync(int VendorId , int productId)
         {
             string returnMessage = "";
 
@@ -180,6 +241,7 @@ namespace InventoryManagement_System.Services
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@VendorId", VendorId);
+                        cmd.Parameters.AddWithValue("@ProductId", productId);
 
                         SqlParameter outputParam = new SqlParameter("@ReturnMessage", SqlDbType.NVarChar, 255)
                         {

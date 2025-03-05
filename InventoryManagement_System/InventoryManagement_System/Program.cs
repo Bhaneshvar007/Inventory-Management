@@ -13,7 +13,10 @@ builder.Services.AddScoped<IProduct, ProductSevices>();
 builder.Services.AddScoped<ICetegory, CetegoryServices>();
 builder.Services.AddScoped<ICustomer, CustomerServices>();
 builder.Services.AddScoped<IS_Vendor, VendorHelper>();
-builder.Services.AddScoped<IS_Customer , CustomerHelper>();
+builder.Services.AddScoped<IS_Customer, CustomerHelper>();
+builder.Services.AddScoped<IStock, StockService>();
+builder.Services.AddScoped<IS_Stock, StockHelper>();
+
 
 
 builder.Services.AddScoped<IAuth , AuthService>();

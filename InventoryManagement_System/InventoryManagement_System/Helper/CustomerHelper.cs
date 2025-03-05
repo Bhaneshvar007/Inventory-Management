@@ -49,35 +49,35 @@ namespace InventoryManagement_System.Business
 
 
             // Stock Management 
-            var products = await _product.GetProductAsync();
-            if (products == null)
-            {
-                return "No products found.";
-            }
-            var existingProduct = products.FirstOrDefault(p => p.ProductId == newCustomer.Product?.ProductId);
+            //var products = await _product.GetProductAsync();
+            //if (products == null)
+            //{
+            //    return "No products found.";
+            //}
+            //var existingProduct = products.FirstOrDefault(p => p.ProductId == newCustomer.Product?.ProductId);
 
-            if (existingProduct != null)
-            {
-                int updatedQuantity =(int)existingProduct.ProductQuantity;
+            //if (existingProduct != null)
+            //{
+            //    int updatedQuantity =(int)existingProduct.ProductQuantity;
 
-                if(existingProduct.ProductQuantity > newCustomer.Quantity)
-                updatedQuantity = (int)(existingProduct.ProductQuantity - newCustomer.Quantity);
+            //    if(existingProduct.ProductQuantity > newCustomer.Quantity)
+            //    updatedQuantity = (int)(existingProduct.ProductQuantity - newCustomer.Quantity);
                 
-                var newProduct = new ProductModel
-                {
-                    ProductId = existingProduct.ProductId,
-                    ProductName = existingProduct.ProductName,
-                    ProductPrice = existingProduct.ProductPrice,
-                    ProductBrand = existingProduct.ProductBrand,
-                    ProductQuantity = updatedQuantity,
-                    Cetegory = new CetegoryModel()
-                    {
-                        cetegoryId = newCustomer.Cetegory.cetegoryId
-                    }
-                };
+            //    var newProduct = new ProductModel
+            //    {
+            //        ProductId = existingProduct.ProductId,
+            //        ProductName = existingProduct.ProductName,
+            //        ProductPrice = existingProduct.ProductPrice,
+            //        ProductBrand = existingProduct.ProductBrand,
+            //        ProductQuantity = updatedQuantity,
+            //        Cetegory = new CetegoryModel()
+            //        {
+            //            cetegoryId = newCustomer.Cetegory.cetegoryId
+            //        }
+            //    };
 
-                var res = await _product.UpdateProductAsync(newProduct);
-            }
+            //    var res = await _product.UpdateProductAsync(newProduct);
+            //}
 
 
 

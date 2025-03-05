@@ -110,9 +110,9 @@
                     <td>@vendor.CetegoryModel?.cetegoryName</td>
                     <td>@vendor.ProductModel?.ProductName </td>
                     <td>
-                        <a href="@Url.Action("GetVendorById", "Vendor", new { id = vendor.VendorId })" class="btn view">View</a>
-                        <a href="@Url.Action("UpdateVendor", "Vendor", new { id = vendor.VendorId})" class="btn edit">Edit</a>
-                        <a href="@Url.Action("DeleteVendor", "Vendor", new { id = vendor.VendorId})" class="btn delete" onclick="return confirm('Are you sure?')">Delete</a>
+                        <a href="@Url.Action("GetVendorById", "Vendor", new { id1 = vendor.VendorId , id2 = vendor.ProductModel.ProductId })" class="btn view">View</a>
+                        <a href="@Url.Action("UpdateVendor", "Vendor", new { id1 = vendor.VendorId ,id2 = vendor.ProductModel.ProductId })" class="btn edit">Edit</a>
+                        <a href="@Url.Action("DeleteVendor", "Vendor", new { id1 = vendor.VendorId , id2 = vendor.ProductModel.ProductId})" class="btn delete" onclick="return confirm('Are you sure?')">Delete</a>
                     </td>
                 </tr>
             }
